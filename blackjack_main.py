@@ -60,15 +60,15 @@ class Player(object):
             if card.value <= 10: #for number cards, add one
                 self.score += card.value
                 self.score += 1
-            elif card.value == '14': #ACE
+            elif card.value == 13: #ACE
                 self.score += 11
-            elif card.value in [11,12,13]: #JACK QUEEN KING
+            elif card.value in [10,11,12]: #JACK QUEEN KING
                 self.score += 10
 
     def displayHand(self):
         for card in self.cards:
             print(str(card), "/ ",)
-        print("\nScore - ", self.score)
+        print("\nScore - ", self.score,"\n")
 
 def displayTable(uName,dealer):
     uName.addScore()
@@ -78,13 +78,16 @@ def displayTable(uName,dealer):
     print( "Dealer shows:")
     print( str(dealer.cards[0]))
 
-def playGame(uName, dealer):
+def playGame(uName, dealer, ace):
 
     deck = Deck()
     deck.shuffle()
 
+    if ace == True:
+        uName.cards = [Card(0,13),Card(0,12)]
+    else:
+        uName.cards   = [deck.cards.pop(0),deck.cards.pop(1)]
 
-    uName.cards   = [deck.cards.pop(0),deck.cards.pop(1)]
     dealer.cards  = [deck.cards.pop(0),deck.cards.pop(1)]
 
     bet = int(input("BET: "))
@@ -95,13 +98,13 @@ def playGame(uName, dealer):
 
         hit = input("'h' to hit, 's' to stay: ")
 
-        if hit == 'h':
+        if hit in ['h','H','hit','Hit']:
             uName.cards.append(deck.cards.pop(0))
             uName.addScore()
             if uName.score > 21:
                 print( "BUST!")
                 break
-        elif hit == 's':
+        elif hit in ['s','S']:
             break
 
 
@@ -133,7 +136,7 @@ def playGame(uName, dealer):
 
     print( "$", uName.money)
 
-    if uName.money < 0:
+    if uName.money <= 0:
         print( "Broke! Go home.")
 
     #compare hands
@@ -146,12 +149,14 @@ def sitAtTable():
     dealer  = Player()
 
     while True:
-        play = input("Hit enter to play a hand")
+        play = input("\n\nHit enter to play a hand : ")
         print("You have $", uName.money)
         if play == '':
-            playGame(uName, dealer)
+            playGame(uName, dealer,0)
+        elif play =='ACE':
+            playGame(uName, dealer,True)
         else:
-            print( 'BITCH...')
+            print( "dfgd")
             break
 
 sitAtTable()
